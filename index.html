@@ -1,0 +1,813 @@
+﻿<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Sistema Financeiro- Condomínio</title>
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+
+  <body>
+    <!-- LOGIN -->
+    <div id="loginScreen" class="login-container">
+      <div class="login-box">
+        <h2>Sistema do Condomínio</h2>
+        <form onsubmit="Auth.login(); return false;">
+  <input
+    type="password"
+    id="passwordInput"
+    placeholder="Digite sua senha"
+  />
+  <button type="submit">Entrar</button>
+</form>
+
+<p id="loginMessage"></p>
+      </div>
+    </div>
+    <!-- SISTEMA -->
+    <div id="systemScreen" style="display: none">
+      <div class="container">
+        <aside class="sidebar">
+          <h2>Condomínio</h2>
+          <ul>
+            <li onclick="UI.showSection('dashboard')">Dashboard</li>
+            <li onclick="UI.showSection('apartamentos')">Apartamentos</li>
+            <li onclick="UI.showSection('leituras')">Leituras</li>
+            <li onclick="UI.showSection('despesas')">Despesas e Receitas</li>
+            <li onclick="UI.showSection('caixa')">Livro Caixa</li>
+            <!--<li onclick="UI.showSection('extratos')">Extratos</li>-->
+            <li onclick="UI.showSection('relatorio')">Relatório Mensal</li>
+            <li onclick="UI.showSection('config')">Configurações</li>
+          </ul>
+        </aside>
+
+        <main class="content">
+          <section id="dashboard" class="section active">
+            <h1>Dashboard</h1>
+
+            <h2 id="mesAtual"></h2>
+
+<div class="dashboard-grid">
+  <div class="dashboard-card">
+    <span>Saldo inicial conta corrente</span>
+    <strong id="dashSaldoInicial">R$ 0,00</strong>
+  </div>
+
+  <div class="dashboard-card">
+    <span>Receitas do mês</span>
+    <strong id="dashReceitasMes">R$ 0,00</strong>
+  </div>
+
+  <div class="dashboard-card">
+    <span>Despesas</span>
+    <strong id="dashTotalDespesas">R$ 0,00</strong>
+  </div>
+
+  <div class="dashboard-card">
+    <span>Saldo conta corrente</span>
+    <strong id="dashSaldoConta">R$ 0,00</strong>
+  </div>
+</div>
+
+<div class="dashboard-comparativo">
+  <h3>Comparação com mês anterior</h3>
+
+  <div class="comparativo-linha">
+    <span>Despesas</span>
+    <strong id="compDespesas">R$ 0,00</strong>
+  </div>
+
+  <div class="comparativo-linha">
+    <span>Arrecadação</span>
+    <strong id="compArrecadacao">R$ 0,00</strong>
+  </div>
+</div>
+
+
+<div class="card-bloco">
+  <h2>Novo mês</h2>
+
+  <div class="linha-form">
+    <div class="campo-dashboard">
+      <label for="novoMes">Mês</label>
+      <select id="novoMes">
+        <option value="01">Janeiro</option>
+        <option value="02">Fevereiro</option>
+        <option value="03">Março</option>
+        <option value="04">Abril</option>
+        <option value="05">Maio</option>
+        <option value="06">Junho</option>
+        <option value="07">Julho</option>
+        <option value="08">Agosto</option>
+        <option value="09">Setembro</option>
+        <option value="10">Outubro</option>
+        <option value="11">Novembro</option>
+        <option value="12">Dezembro</option>
+      </select>
+    </div>
+
+    <div class="campo-dashboard">
+      <label for="novoAno">Ano</label>
+      <select id="novoAno"></select>
+    </div>
+
+    <div class="campo-dashboard botao-dashboard">
+      <button onclick="Sistema.criarNovoMes()">Criar novo mês</button>
+    </div>
+  </div>
+</div>
+
+<div class="card-bloco">
+  <h2>Fechamento mensal</h2>
+
+  <div class="linha-form">
+    <div class="campo-dashboard botao-dashboard">
+      <button class="btn-fechar-mes" onclick="Sistema.fecharMes()">
+        Fechar mês e baixar Excel
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="card-bloco">
+  <h2>Consultar balanços anteriores</h2>
+
+  <div class="linha-form">
+    <div class="campo-dashboard campo-maior">
+      <label for="mesConsulta">Balanços salvos</label>
+      <select id="mesConsulta">
+        <option value="">Selecione um mês</option>
+      </select>
+    </div>
+
+    <div class="campo-dashboard botao-dashboard">
+      <button onclick="Sistema.abrirBalancoAnterior()">
+        Abrir balanço
+      </button>
+    </div>
+  </div>
+</div>
+ </section>
+
+          
+
+<!-- MENU APARTAMENTOS -->
+<section id="apartamentos" class="section">
+  <h1>Apartamentos</h1>
+
+  <div class="card-bloco">
+    <h2>Cadastrar novo</h2>
+
+    <div class="linha-form linha-apartamentos">
+      <div class="campo-dashboard">
+        <label for="aptNumero">Apartamento</label>
+        <input type="text" id="aptNumero" placeholder="Ex: 11" />
+      </div>
+
+      <div class="campo-dashboard">
+        <label for="aptResponsavel">Morador</label>
+        <input type="text" id="aptResponsavel" placeholder="Nome do morador" />
+      </div>
+
+      <div class="campo-dashboard">
+        <label for="aptWhatsapp">WhatsApp</label>
+        <input type="text" id="aptWhatsapp" placeholder="(41) 99999-9999" />
+      </div>
+
+      <div class="campo-dashboard">
+        <label for="aptEmail">E-mail</label>
+        <input type="email" id="aptEmail" placeholder="email@exemplo.com" />
+      </div>
+
+      <div class="campo-dashboard">
+        <label for="aptFormaEnvio">Forma de envio</label>
+        <select id="aptFormaEnvio">
+          <option value="impresso">Impresso</option>
+          <option value="whatsapp">WhatsApp</option>
+          <option value="email">E-mail</option>
+          <option value="whatsapp_impresso">WhatsApp + Impresso</option>
+          <option value="email_impresso">E-mail + Impresso</option>
+        </select>
+      </div>
+
+      <div class="campo-dashboard botao-dashboard">
+        <button onclick="Apartamentos.add()">Adicionar</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card-bloco">
+    <h2>Lista de Apartamentos</h2>
+
+    <div class="tabela-scroll">
+      <table class="tabela-financeira tabela-apartamentos">
+        <thead>
+          <tr>
+            <th>AP</th>
+            <th>Morador</th>
+            <th>WhatsApp</th>
+            <th>E-mail</th>
+            <th>Forma de envio</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody id="listaApartamentos"></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- MENU LEITURAS -->
+<section id="leituras" class="section">
+  <h1 id="tituloLeituras">Leituras - Água e Gás</h1>
+
+  <div class="painel-leituras-topo">
+    <div class="card-acao">
+      <label class="titulo-campo">Importar Leituras</label>
+      <button class="btn-importar" onclick="document.getElementById('importarLeiturasExcel').click()">
+        Importar leitura
+      </button>
+
+      <input
+        type="file"
+        id="importarLeiturasExcel"
+        accept=".xlsx,.xls"
+        style="display:none"
+        onchange="Leituras.importarExcel(event)"
+      />
+    </div>
+
+    <div class="card-acao">
+      <label class="titulo-campo" for="valorFaturaAgua">Conta Total da Sanepar</label>
+      <input
+        type="text"
+        id="valorFaturaAgua"
+        class="input-sanepar"
+        placeholder="R$ 0,00"
+        oninput="formatarMoeda(this)"
+        onchange="Leituras.updateFatura(this.value)"
+      />
+    </div>
+
+    <div class="card-acao card-botao-pdf">
+      <label class="titulo-campo">Impressão</label>
+      <button class="btn-pdf" onclick="gerarPDFLeituras()">
+        Gerar PDF
+      </button>
+    </div>
+  </div>
+
+  <div class="bloco-tabela-leituras" id="blocoTabelaLeituras">
+    <table class="tabela-financeira tabela-leituras">
+      <thead>
+        <tr>
+          <th>Apto</th>
+          <th>Água Ant. (m³)</th>
+          <th>Água Atual (m³)</th>
+          <th>Consumo Água (m³)</th>
+          <th>Valor Água (R$)</th>
+          <th>Gás Ant. (m³)</th>
+          <th>Gás Atual (m³)</th>
+          <th>Consumo Gás (m³)</th>
+          <th>Valor Gás (R$)</th>
+        </tr>
+      </thead>
+      <tbody id="tabelaLeituras"></tbody>
+    </table>
+  </div>
+</section>
+
+          <!--MODULO DEPESAS-->
+          <section id="despesas" class="section">
+            <h2>Lançamentos do Mês</h2>
+
+            <div class="form-lancamento">
+              <div class="campo">
+  <label>Data</label>
+  <input type="date" id="lanData" />
+</div>
+
+              <div class="campo">
+    <label>Tipo</label>
+    <select id="lanTipo" onchange="Lancamentos.atualizarCamposPorTipo()">
+  <option value="">Selecione</option>
+  <option value="receita">Receita</option>
+  <option value="despesa">Despesa</option>
+</select>
+  </div>
+
+              <div class="campo">
+    <label>Categoria</label>
+    <select id="lanCategoria" onchange="Lancamentos.atualizarCamposPorCategoria()">
+                <option value="">Selecione</option>
+                <option value="Agua">Água</option>
+                <option value="Gas">Gás</option>
+                <option value="Luz">Luz</option>
+                <option value="MaterialLimpeza">Material Limpeza</option>
+                <option value="Manutencao">Manutenção</option>
+          
+                <option value="Jardinagem">Jardinagem</option>
+                <option value="PreventivaElevador">
+                  Manutenção Preventiva Elevador
+                </option>
+                <option value="ManutençãoElevador">Manutenção Elevador</option>
+                <option value="TaxasBancarias">Taxas Bancárias</option>
+                <option value="Limpeza">Serviços de Limpeza</option>
+                <option value="Honorarios">Honorários Sindico</option>
+                <option value="CondominioAtraso">
+                  Condomínio em atraso (Rateio)
+                </option>
+                <option value="TaxaDeMudanca">Taxa de Mudança</option>
+                <option value="Multas">Multas</option>
+                <option value="Extras">Extras</option>
+                <option value="Outros">Outros</option>
+              </select>
+              </div>
+
+              <div class="campo campo-longo">
+    <label>Descrição</label>
+    <input type="text" id="lanDescricao" />
+  </div>
+              <div class="campo">
+    <label>Valor</label>
+    <input type="text" id="lanValor" placeholder="Valor (R$)" oninput="formatarMoeda(this)">
+  </div>
+              <div class="campo">
+    <label>Tipo de Rateio</label>
+    <select id="lanDestino">
+                <option value="">Selecione</option>
+                <option value="coeficiente">Coeficiente</option>
+                <option value="igual">Igual</option>
+                <option value="fundo">Fundo de Reserva</option>
+                <option value="individual">Individual</option>
+              </select>
+              </div>
+
+              <div class="campo">
+  <label>Apartamento</label>
+  <select id="lanApartamento">
+    <option value="">Selecione</option>
+  </select>
+</div>
+              <div class="campo botao">
+    <button onclick="Lancamentos.add()">Salvar</button>
+  </div>
+<button class="btn-pdf" onclick="Lancamentos.gerarPDFDespesas()">Gerar PDF</button>
+</div>
+
+            <hr />
+<h2 id="tituloDespesasReceitas">Controle de despesas e receitas do mês</h2>
+
+<div class="bloco-financeiro" id="blocoEntradas">
+  <h3>Entradas</h3>
+  <table class="tabela-financeira">
+    <thead>
+      <tr>
+        <th>Descrição</th>
+        <th>Valor</th>
+      </tr>
+    </thead>
+    <tbody id="listaEntradas"></tbody>
+  </table>
+  <p class="subtotal" id="subtotalEntradas"><strong>Subtotal = R$ 0,00</strong></p>
+</div>
+
+<div class="bloco-financeiro" id="blocoIgual">
+  <h3>Despesas divididas por igual</h3>
+  <table class="tabela-financeira">
+    <thead>
+      <tr>
+        <th>Data</th>
+        <th>Tipo</th>
+        <th>Categoria</th>
+        <th>Descrição</th>
+        <th>Valor</th>
+        <th>Rateio</th>
+        <th>Ação</th>
+      </tr>
+    </thead>
+    <tbody id="listaLancamentosIgual"></tbody>
+  </table>
+  <p class="subtotal" id="subtotalIgual"><strong>Subtotal = R$ 0,00</strong></p>
+</div>
+
+<div class="bloco-financeiro" id="blocoFundo">
+  <h3>Despesas sem rateio (Fundo de Reserva)</h3>
+  <table class="tabela-financeira">
+    <thead>
+      <tr>
+        <th>Data</th>
+        <th>Tipo</th>
+        <th>Categoria</th>
+        <th>Descrição</th>
+        <th>Valor</th>
+        <th>Rateio</th>
+        <th>Ação</th>
+      </tr>
+    </thead>
+    <tbody id="listaLancamentosFundo"></tbody>
+  </table>
+  <p class="subtotal" id="subtotalFundo"><strong>Subtotal = R$ 0,00</strong></p>
+</div>
+
+<div class="bloco-financeiro" id="blocoCoef">
+  <h3>Despesas comuns (Coeficiente)</h3>
+  <table class="tabela-financeira">
+    <thead>
+      <tr>
+        <th>Data</th>
+        <th>Tipo</th>
+        <th>Categoria</th>
+        <th>Descrição</th>
+        <th>Valor</th>
+        <th>Rateio</th>
+        <th>Ação</th>
+      </tr>
+    </thead>
+    <tbody id="listaLancamentosCoef"></tbody>
+  </table>
+  <p class="subtotal" id="subtotalCoef"><strong>Subtotal = R$ 0,00</strong></p>
+</div>
+
+<h3 id="totalGeralLancamentos">Total geral = R$ 0,00</h3>
+
+<div class="bloco-financeiro" id="blocoFundoReservaMes">
+  <h3>Fundo de Reserva do mês</h3>
+  <table class="tabela-financeira">
+    <thead>
+      <tr>
+        <th>Descrição</th>
+        <th>Valor</th>
+        <th>AP 2 Quartos</th>
+        <th>AP 3 Quartos</th>
+      </tr>
+    </thead>
+    <tbody id="listaFundoReservaCalculado"></tbody>
+  </table>
+  <p class="subtotal" id="subtotalFundoReservaCalculado"><strong>Subtotal = R$ 0,00</strong></p>
+</div>
+
+<div class="bloco-financeiro" id="blocoCalculoCondominio">
+  <h3>Cálculo do Condomínio</h3>
+  <table class="tabela-financeira">
+    <thead>
+      <tr>
+        <th>Descrição</th>
+        <th>Total</th>
+        <th>AP 2 Quartos</th>
+        <th>AP 3 Quartos</th>
+      </tr>
+    </thead>
+    <tbody id="listaCalculoCondominio"></tbody>
+  </table>
+  <p class="subtotal" id="subtotalCalculoCondominio"><strong>Subtotal = R$ 0,00</strong></p>
+</div>
+
+<div class="bloco-financeiro" id="blocoSaldos">
+  <h3>Saldos</h3>
+  <table class="tabela-financeira">
+    <thead>
+      <tr>
+        <th>Descrição</th>
+        <th>Valor</th>
+      </tr>
+    </thead>
+    <tbody id="listaSaldos"></tbody>
+  </table>
+</div>
+          </section>
+          <!--MENU LIVRO CAIXA-->
+
+          <section id="caixa" class="section">
+  <h1 id="tituloLivroCaixa">Controle de Caixa</h1>
+
+  <div class="card-caixa" id="blocoLivroCaixa">
+    <table class="tabela-caixa">
+      <thead>
+        <tr>
+          <th>Descrição</th>
+          <th>Valor</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Saldo inicial conta corrente</td>
+          <td>
+            <input
+              type="text"
+              id="caixaSaldoInicial"
+              value="R$ 0.000,00"
+              oninput="formatarMoeda(this); Caixa.update()"
+            />
+          </td>
+        </tr>
+
+        <tr>
+          <td>Receitas do mês</td>
+          <td>
+            <input
+              type="text"
+              id="caixaReceitasMes"
+              placeholder="R$ 0,00"
+              oninput="formatarMoeda(this); Caixa.update()"
+            />
+          </td>
+        </tr>
+
+        <tr>
+          <td>Receita aplicação conta corrente</td>
+          <td>
+            <input
+              type="text"
+              id="caixaReceitaAplicacao"
+              placeholder="R$ 0,00"
+              oninput="formatarMoeda(this); Caixa.update()"
+            />
+          </td>
+        </tr>
+
+        <tr>
+          <td>Despesas</td>
+          <td>
+            <input
+              type="text"
+              id="caixaDespesas"
+              readonly
+              value="R$ 0,00"
+            />
+          </td>
+        </tr>
+
+        <tr class="linha-total-caixa">
+          <td><strong>Saldo conta corrente</strong></td>
+          <td>
+            <input
+              type="text"
+              id="caixaSaldoFinal"
+              readonly
+              value="R$ 0,00"
+            />
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="acoes-caixa">
+    <button class="btn-pdf" onclick="Caixa.gerarPDF()">Gerar PDF</button>
+  </div>
+</section>
+          <!--MENU EXTRATOS
+
+          <section id="extratos" class="section">
+  <h1>Extrato por Apartamento</h1>
+
+  <div class="card-extrato-controle">
+    <h3>Selecionar apartamento</h3>
+
+    <div class="linha-extrato">
+      <div class="campo-dashboard">
+        <label for="selectApartamentoExtrato">Apartamento</label>
+        <select id="selectApartamentoExtrato"></select>
+      </div>
+
+      <div class="campo-dashboard botao-dashboard">
+        <button onclick="Extratos.gerar()">Gerar extrato</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="resultadoExtratos"></div>
+</section>
+-->
+
+
+<!-- MENU RELATÓRIO -->
+<section id="relatorio" class="section">
+  <h1>Relatórios e Impressões</h1>
+
+  <!-- 1. PRESTAÇÃO DE CONTAS -->
+  <div class="card-bloco">
+    <h2>Prestação de contas</h2>
+    <p>Gera o relatório completo para conferência e assinatura do conselho.</p>
+
+    <div class="linha-form">
+      <div class="campo-dashboard botao-dashboard">
+        <button onclick="Relatorio.gerarPDFCompleto()">
+          Gerar relatório completo em PDF
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. EXTRATO INDIVIDUAL -->
+  <div class="card-bloco">
+    <h2>Extratos</h2>
+    <p>Gera o extrato de um apartamento específico ou de todos.</p>
+
+    <div class="linha-form">
+      <div class="campo-dashboard campo-maior">
+        <label for="selectApartamentoRelatorio">Apartamento</label>
+        <select id="selectApartamentoRelatorio">
+          <option value="">Selecione</option>
+        </select>
+      </div>
+
+     
+
+      <div class="campo-dashboard botao-dashboard">
+        <button onclick="Relatorio.imprimirExtratoSelecionado()">
+          PDF Extrato
+        </button>
+      </div>
+
+      <div class="campo-dashboard botao-dashboard">
+        <button onclick="Relatorio.imprimirExtratosMoradores()">
+          Imprimir todos os extratos (PDF)
+        </button>
+      </div>
+    </div>
+  </div>
+
+  
+  <!-- RESULTADOS (mantém escondido/uso interno) -->
+  <div id="resultadoExtratoRelatorio" style="display:none;"></div>
+  <div id="conteudoRelatorio" style="display:none;"></div>
+</section>
+
+<!-- MENU CONFIGURAÇÕES -->
+<section id="config" class="section">
+  <h1>Configurações</h1>
+
+  <!-- ALTERAR SENHA -->
+  <div class="card-bloco">
+    <div class="card-header">
+      <h2>🔐 Alterar senha</h2>
+      <span class="card-badge">Segurança</span>
+    </div>
+
+    <div class="grid-2col">
+      <div class="campo-dashboard">
+        <label for="currentPassword">Senha atual</label>
+        <input type="password" id="currentPassword" placeholder="Digite sua senha atual" />
+      </div>
+
+      <div class="campo-dashboard">
+        <label for="newPassword">Nova senha</label>
+        <input type="password" id="newPassword" placeholder="Digite a nova senha" />
+      </div>
+
+      <div class="campo-dashboard botao-dashboard" style="grid-column: span 2;">
+        <button onclick="Auth.changePassword()" class="btn-primary">
+          Alterar senha
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PARÂMETROS DE ÁGUA -->
+  <div class="card-bloco">
+    <div class="card-header">
+      <h2>💧 Parâmetros de Água</h2>
+      <span class="card-badge">Tarifas Sanepar</span>
+    </div>
+
+    <div class="grid-3col">
+      <div class="campo-dashboard">
+        <label for="taxaMinima">
+          Valor taxa mínima
+          <span class="tooltip" title="Valor cobrado até o limite mínimo">ⓘ</span>
+        </label>
+        <input type="text" id="taxaMinima" oninput="formatarMoeda(this)" placeholder="Ex: 52,33" />
+        <small class="campo-help">Exemplo: 52,33</small>
+      </div>
+
+      <div class="campo-dashboard">
+        <label for="limiteMinimo">Limite mínimo (m³)</label>
+        <input type="number" id="limiteMinimo" step="0.01" placeholder="Ex: 5" />
+        <small class="campo-help">Consumo dentro da taxa mínima</small>
+      </div>
+
+      <div class="campo-dashboard">
+        <label for="valorExcedente">Valor do m³ excedente</label>
+        <input type="text" id="valorExcedente" oninput="formatarMoeda(this)" placeholder="Ex: 10,56" />
+        <small class="campo-help">Por m³ acima do limite</small>
+      </div>
+    </div>
+
+    <div class="acoes-card">
+      <button onclick="Config.saveParametros()" class="btn-secondary">
+        💾 Salvar parâmetros de água
+      </button>
+      <button onclick="Config.resetarAgua()" class="btn-outline">
+        ↺ Restaurar padrão
+      </button>
+    </div>
+  </div>
+
+  <!-- PARÂMETROS DE GÁS -->
+  <div class="card-bloco">
+    <div class="card-header">
+      <h2>🔥 Parâmetros de Gás</h2>
+      <span class="card-badge">Tarifa Gás</span>
+    </div>
+
+    <div class="grid-2col">
+      <div class="campo-dashboard">
+        <label for="valorGas">Valor do m³ do gás</label>
+        <input type="text" id="valorGas" oninput="formatarMoeda(this)" placeholder="Ex: 16,48" />
+        <small class="campo-help">Cobrado por m³ consumido</small>
+      </div>
+
+      <div class="campo-dashboard botao-dashboard" style="display: flex; align-items: flex-end;">
+        <button onclick="Config.saveParametrosGas()" class="btn-secondary" style="margin-bottom: 0;">
+          💾 Salvar parâmetros de gás
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- DADOS DO RECIBO DO SÍNDICO -->
+  <div class="card-bloco">
+    <div class="card-header">
+      <h2>📄 Dados do Recibo do Síndico</h2>
+      <span class="card-badge">Documentação</span>
+    </div>
+
+    <div class="grid-2col">
+      <div class="campo-dashboard">
+        <label for="reciboNomeSindico">Nome do síndico</label>
+        <input type="text" id="reciboNomeSindico" placeholder="Nome completo" />
+      </div>
+
+      <div class="campo-dashboard">
+        <label for="reciboCpfSindico">CPF</label>
+        <input type="text" id="reciboCpfSindico" placeholder="000.000.000-00" oninput="formatarCPF(this)" />
+      </div>
+
+      <div class="campo-dashboard">
+        <label for="reciboRgSindico">RG</label>
+        <input type="text" id="reciboRgSindico" placeholder="00.000.000-0" />
+      </div>
+
+      <div class="campo-dashboard">
+        <label for="reciboValorSindico">Valor recebido</label>
+        <input type="text" id="reciboValorSindico" placeholder="Ex: 1500,00" oninput="formatarMoeda(this)" />
+        <small class="campo-help">Digite apenas o número</small>
+      </div>
+    </div>
+
+    <div class="acoes-card">
+      <button onclick="Config.saveReciboSindico()" class="btn-secondary">
+        💾 Salvar dados do síndico
+      </button>
+    </div>
+  </div>
+
+  <!-- BACKUP DO SISTEMA -->
+  <div class="card-bloco card-backup">
+    <div class="card-header">
+      <h2>💾 Backup do sistema</h2>
+      <span class="card-badge card-badge-warning">Importante</span>
+    </div>
+
+    <p class="card-description">
+      Exporte um arquivo JSON com todos os dados ou restaure um backup anterior.
+      <strong>O backup inclui todos os meses, apartamentos e lançamentos.</strong>
+    </p>
+
+    <div class="backup-actions">
+      <button onclick="Sistema.exportarBackupJSON()" class="btn-primary">
+        📥 Exportar backup
+      </button>
+
+      <input
+        type="file"
+        id="inputImportarBackupJSON"
+        accept=".json"
+        style="display:none"
+        onchange="Sistema.importarBackupJSON(event)"
+      />
+
+      <button onclick="document.getElementById('inputImportarBackupJSON').click()" class="btn-outline">
+        📤 Importar backup
+      </button>
+    </div>
+
+    <div class="backup-info">
+      <small>⚠️ Atenção: A importação substituirá TODOS os dados atuais do sistema.</small>
+    </div>
+  </div>
+</section>
+        </main>
+      </div>  
+        
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+    <script src="js/database.js"></script>
+    <script src="js/finance.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/app.js"></script>
+  </body>
+</html>
